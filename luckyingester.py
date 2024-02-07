@@ -6,6 +6,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 import json
 from elasticsearch import Elasticsearch
+
+from luckyioc import LuckyIoc
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -47,12 +49,10 @@ def main(error_path, elasticsearch, es_index, api_key):
         es = Elasticsearch([elasticsearch], ssl_show_warn=False,
                            verify_certs=False, api_key=api_key)
 
-        for indicator in new_data:
-            data_row = {"date":
-                        f"{date.strftime('%Y')}-{date.strftime('%m')}-{date.strftime('%d')}",
-                        "indicator": indicator}
-            print(data_row)
-            # es.index(index=es_index, document=data_row)
+        for item in new_data:
+            indicator = LuckyIoc(datetime.strptime(str(date.date()), "%Y-%m-%d"), indicator=item)
+            # print(indicator)
+            es.index(index=es_index, document=indicator.asdict())
     except Exception as e:
         error_logger.error(e)
         # raise Exception("error") from e

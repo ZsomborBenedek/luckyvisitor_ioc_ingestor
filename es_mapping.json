@@ -1,0 +1,55 @@
+{
+    "mappings": {
+        "properties": {
+            "@timestamp": {
+                "type": "date"
+            },
+            "event": {
+                "properties": {
+                    "category": {
+                        "type": "keyword",
+                        "ignore_above": 1024
+                    },
+                    "type": {
+                        "type": "keyword",
+                        "ignore_above": 1024
+                    }
+                }
+            },
+            "message": {
+                "type": "match_only_text"
+            },
+            "threat": {
+                "properties": {
+                    "feed": {
+                        "properties": {
+                            "name": {
+                                "type": "constant_keyword",
+                                "value": "LuckyVisitor"
+                            }
+                        }
+                    },
+                    "indicator": {
+                        "properties": {
+                            "ip": {
+                                "type": "ip"
+                            },
+                            "type": {
+                                "type": "keyword",
+                                "ignore_above": 1024
+                            },
+                            "url": {
+                                "properties": {
+                                    "domain": {
+                                        "type": "keyword",
+                                        "ignore_above": 1024
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
