@@ -2,3 +2,4 @@
 *.ndjson
 *.log
 *.pyc
+.lucky_elk
