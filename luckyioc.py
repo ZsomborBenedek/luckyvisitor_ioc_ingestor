@@ -3,7 +3,7 @@ import re
 import json
 
 
-class LuckyIoc():
+class LuckyIoc:
     date: datetime
     indicator: str
 
@@ -18,7 +18,7 @@ class LuckyIoc():
         """
         Check if the given text is an IP address.
         """
-        ip_pattern = r'\b(?:\d{1,3}\.){3}\d{1,3}\b'
+        ip_pattern = r"\b(?:\d{1,3}\.){3}\d{1,3}\b"
         return re.match(ip_pattern, self.indicator) is not None
 
     def asdict(self) -> dict:
@@ -27,16 +27,12 @@ class LuckyIoc():
             return {
                 "@timestamp": self.date.isoformat(),
                 "message": self.indicator,
-                "threat": {
-                    "indicator": {
-                        "type": "ipv4-addr",
-                        "ip": self.indicator
-                    }
-                },
+                "threat": {"indicator": {"type": "ipv4-addr", "ip": self.indicator}},
                 "event": {
                     "type": "indicator",
-                    "category": "threat"
-                }
+                    "category": "threat",
+                    "module": "ti_luckyvisitor",
+                },
             }
         else:
             # print(f"{self.indicator} was a url!")
@@ -47,12 +43,15 @@ class LuckyIoc():
                     "indicator": {
                         "type": "url",
                         "url": {
-                            "domain": self.indicator
-                        }
+                            "domain": self.indicator,
+                            "full": self.indicator,
+                            "original": self.indicator,
+                        },
                     }
                 },
                 "event": {
                     "type": "indicator",
-                    "category": "threat"
-                }
+                    "category": "threat",
+                    "module": "ti_luckyvisitor",
+                },
             }
