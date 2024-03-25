@@ -10,17 +10,24 @@ source .lucky_elk/bin/activate
 pip install elasticsearch requests
 
 read -p "Enter Elastic IP: " elastic_ip
+read -p "Enter index for logs: " es_index
 read -p "Enter token: " token
+
+mapping_file="es_mapping.json"
 
 # Create directory and download initial data
 path="$(pwd)"
 git clone https://github.com/JPCERTCC/Lucky-Visitor-Scam-IoC.git
+git pull ./Lucky-Visitor-Scam-IoC
+
+# Create index an apply mapping
+python3 luckyessetup.py -err $path/luckyvisitor_error.log -es "https://$elastic_ip:9200" -ei $es_index -ak "$token" -mp $mapping_file
 
 # Parse data and upload it to Elasticsearch
-python3 luckybulkuploader.py -f ./Lucky-Visitor-Scam-IoC -o lucky.ndjson -es "https://$elastic_ip:9200" -ei logs-ti_luckyvisitor -ak "$token"
+python3 luckybulkuploader.py -f ./Lucky-Visitor-Scam-IoC -o lucky.ndjson -es "https://$elastic_ip:9200" -ei $es_index -ak "$token"
 
 # Add a cronjob for running luckyingester.py
-(crontab -l ; echo "0 23 * * * $path/.lucky_elk/bin/python3 $path/luckyingester.py -err $path/luckyvisitor_error.log -es 'https://$elastic_ip:9200' -ei logs-ti_luckyvisitor -ak '$token'") | crontab -
+(crontab -l ; echo "0 23 * * * $path/.lucky_elk/bin/python3 $path/luckyingester.py -err $path/luckyvisitor_error.log -es 'https://$elastic_ip:9200' -ei '$es_index' -ak '$token'") | crontab -
 
 # Deactivate the virtual environment
 deactivate
