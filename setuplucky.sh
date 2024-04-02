@@ -10,9 +10,10 @@ source .lucky_elk/bin/activate
 pip install elasticsearch requests
 
 read -p "Enter Elastic IP: " elastic_ip
-read -p "Enter index for logs: " es_index
+read -p "Enter index for logs [logs-ti_luckyvisitor]: " es_index
 read -p "Enter token: " token
 
+es_index=${es_index:-logs-ti_luckyvisitor}
 mapping_file="es_mapping.json"
 
 # Create directory and download initial data

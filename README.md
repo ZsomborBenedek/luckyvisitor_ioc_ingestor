@@ -11,23 +11,17 @@ Ingest Lucky Visitor scam IoCs into Elasticsearch:
 - HTTP access to `github.com` on the backend
 
 ## Setup
-- Create index `logs-ti_luckyvisitor` in Kibana
+
 - Clone the repository
 - Make the setup script executable: `chmod +x setuplucky.sh`
 - Run the script: `./setuplucky.sh`
-- Enter the Elastic IP and API token
-
-### Running manually
-- `git clone https://github.com/JPCERTCC/Lucky-Visitor-Scam-IoC.git`
-- `python3 luckybulkuploader.py -f ../Lucky-Visitor-Scam-IoC -o lucky.ndjson -es 'https://x.x.x.x:9200' -ei logs-ti_luckyvisitor -ak *****`
-- `python3 luckyingester.py -err luckyvisitor_error.log -es 'https://x.x.x.x:9200' -ei logs-ti_luckyvisitor -ak *****`
-
+- Enter the Elastic IP and API token and index for the logs (by default, `logs-ti_luckyvisitor`)
 
 ## How it works
-- Runs each day at 8am via cronjob  
+- Runs each day at 11pm via cronjob  
 - Pulls the day's indicator data from [https://github.com/JPCERTCC/Lucky-Visitor-Scam-IoC](https://github.com/JPCERTCC/Lucky-Visitor-Scam-IoC "https://github.com/jpcertcc/lucky-visitor-scam-ioc")  
 - Transforms each indicator into JSON-objects  
-- Sends it into the logs-ti_luckyvisitor index with the LuckyVisitor-integration Elastic API key  
+- Sends it into the defined index with the LuckyVisitor-integration Elastic API key  
 - If there were errors it writes into the `luckyvisitor_error.log` and `luckyvisitor_errors` dataset in Kibana
 
 ## Integrate error logs
